@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+
+  mongoose:
+    build: ../Mongo
+    container_name: mongoose
+    entrypoint: [ "sh", "start.sh" ]
+    working_dir: "/app/Mongo"
+    environment:
+      - DB_CONN_STRING=mongodb://erco:tcc22&nlp@mongodb
+    depends_on:
+      - mongodb
+    volumes:
+      - "../Mongo/:/app/Mongo"
+      - "../WebScrap/themes/:/app/Mongo/themes"
+
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=erco
+      - MONGO_INITDB_ROOT_PASSWORD=tcc22&nlp
+    ports:
+      - 27017:27017
+    logging:
+      driver: none
+    volumes:
+      - ../data:/data/db
