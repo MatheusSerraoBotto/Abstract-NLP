@@ -9,6 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from themes import themes
 from enviroment import enviroment
 import pandas as pd
+from bs4 import BeautifulSoup
 
 # Setting url
 ARTICLE_URL = enviroment['article_url']
@@ -25,41 +26,37 @@ options.headless = HEADLESS
 # Starting WebDriver
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
-def get_abstract_from_theme(id: str):
+def get_abstract_from_theme(url: str):
     while(True):
         try:
             # Setting options to WebDriverChrome
-            driver.get(ARTICLE_URL + str(id))
+            driver.get(url)
 
             # Waiting some elements to start scrap
-            abstract_element = EC.presence_of_all_elements_located(
+            abstract_element = EC.presence_of_element_located(
                 (By.CLASS_NAME, CLASS_NAME_ABSTRACT))
             abstract = WebDriverWait(driver, TIME_TO_LOAD).until(abstract_element)
-            abstract_text = abstract[0].text[10:]       
 
-            title_element = EC.presence_of_all_elements_located(
-                (By.CLASS_NAME, CLASS_NAME_TITLE))
-            title = WebDriverWait(driver, TIME_TO_LOAD).until(title_element)
-            title_text = title[0].text
+            content = driver.page_source
+            soup = BeautifulSoup(content, features="html.parser")
 
-            return title_text, abstract_text
+            a = soup.findAll('div', attrs={'class': CLASS_NAME_ABSTRACT})[0]
+            return a.contents[2].text, a.contents[8].text
         except:
             pass
 
 def write_abstract_in_csv(csv_name):
-    filepath = f'./themes/{csv_name}.csv'
-    
-    df = pd.read_csv(filepath, sep='\t')
-    df["title"] = ""
-    df["abstract"] = ""
-
-    for index, row in df.iterrows():
-        title_text, abstract_text = get_abstract_from_theme(row.id)
-        df.at[index, 'title'] = title_text
-        df.at[index, 'abstract'] = abstract_text
-        print(row)
-
-    df.to_csv(filepath, index=False)
+    import json
+    f = open('/home/mserrao/Documentos/TCC_V2/WebScrap/JSON/response.json')
+    data = json.load(f)
+    results = data['Articles']
+    data = {'title': [], 'abstract': []}
+    for article in results:
+        title_text, abstract_text = get_abstract_from_theme(article['PublicUrl'])
+        data['title'].append(title_text) 
+        data['abstract'].append(abstract_text) 
+    df = pd.DataFrame.from_dict(data)
+    df.to_csv('/home/mserrao/Documentos/TCC_V2/WebScrap/src/themes/anxiety.csv', index=False)
 
 def write_abstract_of_themes():
     for theme in themes:
