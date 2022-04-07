@@ -27,7 +27,7 @@ PER_PAGE = enviroment['query']['per_page']
 PAGES = enviroment['query']['pages']
 
 
-def create_csv_of_ids(theme: str):
+def create_csv_of_ids(theme: str, pages: int):
     try:
         # Setting options to WebDriverChrome
         options = Options()
@@ -37,29 +37,37 @@ def create_csv_of_ids(theme: str):
         driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         
         results = []
-        for page in range(1, PAGES+1):
-            driver.get(build_query(URL, theme, (START_YEAR, END_YEAR), page, PER_PAGE))
+        for page in range(1, pages+1):
+            page_read = False
+            while not page_read:
+                try:
+                    driver.get(build_query(URL, theme, (START_YEAR, END_YEAR), page, PER_PAGE))
 
-            # Waiting some elements to start scrapy
-            element_present = EC.presence_of_all_elements_located(
-                (By.CLASS_NAME, CLASS_NAME))
-            elements = WebDriverWait(driver, TIME_TO_LOAD).until(element_present)
+                    # Waiting some elements to start scrapy
+                    element_present = EC.presence_of_all_elements_located(
+                        (By.CLASS_NAME, CLASS_NAME))
+                    elements = WebDriverWait(driver, TIME_TO_LOAD).until(element_present)
 
-            # Waiting some elements to start scrap
-            content = driver.page_source
-            soup = BeautifulSoup(content, features="html.parser")
+                    # Waiting some elements to start scrap
+                    content = driver.page_source
+                    soup = BeautifulSoup(content, features="html.parser")
 
-            for a in soup.findAll('div', attrs={'class': CLASS_NAME}):
-                results.append(a.attrs['id'])
-
+                    for a in soup.findAll('div', attrs={'class': CLASS_NAME}):
+                        results.append(a.attrs['id'])
+                    
+                    page_read = True
+                except:
+                    pass
         df = pd.DataFrame({'id': results})
-        df.to_csv(f"themes/{theme.lower().replace(' ','_')}.csv", index=False, encoding='utf-8')
+        df.to_csv(f"/home/mserrao/Documentos/TCC_V2/WebScrap/themes/{theme.lower().replace(' ','_')}.csv", index=False, encoding='utf-8')
 
     finally:
         driver.quit()
 
 def generate_csv_of_themes():
     for theme in themes:
-        create_csv_of_ids(theme)
+        theme_name = theme[0].lower().replace(' ','_')
+        pages = theme[1]
+        create_csv_of_ids(theme_name, pages)
 
 generate_csv_of_themes()

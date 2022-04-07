@@ -26,28 +26,33 @@ options.headless = HEADLESS
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
 def get_abstract_from_theme(id: str):
+    loop = 0
     while(True):
         try:
+            if loop == 5:
+                return 'NA', 'NA'
             # Setting options to WebDriverChrome
             driver.get(ARTICLE_URL + str(id))
 
             # Waiting some elements to start scrap
-            abstract_element = EC.presence_of_all_elements_located(
+            abstract_element = EC.presence_of_element_located(
                 (By.CLASS_NAME, CLASS_NAME_ABSTRACT))
             abstract = WebDriverWait(driver, TIME_TO_LOAD).until(abstract_element)
-            abstract_text = abstract[0].text[10:]       
+            abstract_text = abstract.text[10:]       
 
-            title_element = EC.presence_of_all_elements_located(
+            title_element = EC.presence_of_element_located(
                 (By.CLASS_NAME, CLASS_NAME_TITLE))
             title = WebDriverWait(driver, TIME_TO_LOAD).until(title_element)
-            title_text = title[0].text
+            title_text = title.text
 
             return title_text, abstract_text
-        except:
+        except Exception as e:
+            print(e)
+            loop += 1
             pass
 
 def write_abstract_in_csv(csv_name):
-    filepath = f'./themes/{csv_name}.csv'
+    filepath = f'/home/mserrao/Documentos/TCC_V2/WebScrap/src/themes/{csv_name}.csv'
     
     df = pd.read_csv(filepath, sep='\t')
     df["title"] = ""
@@ -57,14 +62,13 @@ def write_abstract_in_csv(csv_name):
         title_text, abstract_text = get_abstract_from_theme(row.id)
         df.at[index, 'title'] = title_text
         df.at[index, 'abstract'] = abstract_text
-        print(row)
 
-    df.to_csv(filepath, index=False)
+    df.to_csv(filepath, index=False, encoding='utf-8')
 
 def write_abstract_of_themes():
     for theme in themes:
-        theme = theme.lower().replace(' ','_')
-        write_abstract_in_csv(theme)
+        theme_name = theme[0].lower().replace(' ','_')
+        write_abstract_in_csv(theme_name)
 
 write_abstract_of_themes()
 

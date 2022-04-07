@@ -1,6 +1,6 @@
 def build_query(url, theme: str, range=None, page=1, per_page=100):
 
-    theme = theme.replace(' ', '%20')
+    theme = theme.replace('_', '%20')
     search = f'&queryText=("All%20Metadata":{theme})'
     url += search
 

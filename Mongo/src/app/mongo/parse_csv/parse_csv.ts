@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as path from "path";
 import { parse } from 'csv-parse';
 import { abstractUtils } from "../abstracts/abstracts.utils";
 
@@ -7,6 +6,7 @@ type Abstract = {
   id: string;
   title: string;
   abstract: string;
+  
 };
 
 export function read_csv(csvFilePath: string) {
@@ -17,6 +17,7 @@ export function read_csv(csvFilePath: string) {
   parse(fileContent, {
     delimiter: ',',
     columns: headers,
+    from_line: 2
   }, (error, result: Abstract[]) => {
     if (error) {
       console.error(error);
@@ -24,8 +25,6 @@ export function read_csv(csvFilePath: string) {
     const theme = csvFilePath.split('.')[0].replace('_', ' ')
     result.forEach(abstract => {
       let abstract_obj = { ...abstract, theme }
-      console.log(abstract_obj);
-
       abstractUtils.saveAbstract(abstract_obj)
     });
   })

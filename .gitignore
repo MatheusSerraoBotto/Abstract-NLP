@@ -1,3 +1,13 @@
 data
 .env
 WebScrap/venv/
+
+WebScrap/src/themes/
+
+WebScrap/themes/
+
+Mongo/themes/
+
+Mongo/node_modules/
+
+Mongo/dist/
