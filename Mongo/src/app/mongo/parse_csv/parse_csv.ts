@@ -11,22 +11,28 @@ type Abstract = {
 
 export function read_csv(csvFilePath: string) {
 
-  const headers = ['id', 'title', 'abstract'];
+  const headers = ['title', 'abstract'];
   const fileContent = fs.readFileSync(`/app/Mongo/themes/${csvFilePath}`, { encoding: 'utf-8' });
 
   parse(fileContent, {
     delimiter: ',',
     columns: headers,
+    from_line: 2
   }, (error, result: Abstract[]) => {
     if (error) {
       console.error(error);
     }
     const theme = csvFilePath.split('.')[0].replace('_', ' ')
     result.forEach(abstract => {
-      let abstract_obj = { ...abstract, theme }
-      console.log(abstract_obj);
+      let abstract_obj = { ...abstract, theme}
+      if (!(isBlank(abstract.title) || isBlank(abstract.abstract))){
+        abstractUtils.saveAbstract(abstract_obj)
+      }
 
-      abstractUtils.saveAbstract(abstract_obj)
     });
   })
 };
+
+function isBlank(str: string) {
+  return (!str || /^\s*$/.test(str) || str == '\n');
+}

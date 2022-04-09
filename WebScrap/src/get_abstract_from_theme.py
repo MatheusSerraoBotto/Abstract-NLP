@@ -51,12 +51,12 @@ def write_abstract_in_csv(csv_name):
     data = json.load(f)
     results = data['Articles']
     data = {'title': [], 'abstract': []}
-    for article in results:
+    for index, article in enumerate(results):
         title_text, abstract_text = get_abstract_from_theme(article['PublicUrl'])
         data['title'].append(title_text) 
         data['abstract'].append(abstract_text) 
     df = pd.DataFrame.from_dict(data)
-    df.to_csv('/home/mserrao/Documentos/TCC_V2/WebScrap/src/themes/anxiety.csv', index=False)
+    df.to_csv('/home/mserrao/Documentos/TCC_V2/WebScrap/src/themes/anxiety.csv', index=False, encoding='utf-8')
 
 def write_abstract_of_themes():
     for theme in themes:
