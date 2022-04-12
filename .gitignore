@@ -11,3 +11,13 @@ Mongo/themes/
 Mongo/node_modules/
 
 Mongo/dist/
+
+Embedding/.vscode/
+
+Embedding/__pycache__/
+
+Embedding/notebooks/GloVe/
+
+Embedding/notebooks/encoder/
+
+Embedding/tokens

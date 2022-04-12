@@ -1,18 +1,35 @@
 version: '3.9'
+
 services:
 
-  mongoose:
-    build: ../Mongo
-    container_name: mongoose
-    entrypoint: [ "sh", "start.sh" ]
-    working_dir: "/app/Mongo"
+  embedding:
+    build: ../Embedding
+    container_name: embedding
+    # entrypoint: [ "sh", "start.sh" ]
+    tty: true
+    working_dir: "/app/Embedding"
+    ports:
+      - 34597:34597
     environment:
       - DB_CONN_STRING=mongodb://erco:tcc22&nlp@mongodb
     depends_on:
       - mongodb
     volumes:
-      - "../Mongo/:/app/Mongo"
-      - "/home/mserrao/Documentos/themes/:/app/Mongo/themes"
+      - "../Embedding/:/app/Embedding"
+
+
+  # mongoose:
+  #   build: ../Mongo
+  #   container_name: mongoose
+  #   entrypoint: [ "sh", "start.sh" ]
+  #   working_dir: "/app/Mongo"
+  #   environment:
+  #     - DB_CONN_STRING=mongodb://erco:tcc22&nlp@mongodb
+  #   depends_on:
+  #     - mongodb
+  #   volumes:
+  #     - "../Mongo/:/app/Mongo"
+  #     - "/home/mserrao/Documentos/themes/:/app/Mongo/themes"
 
   mongodb:
     image: mongo:5.0
@@ -20,6 +37,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=erco
       - MONGO_INITDB_ROOT_PASSWORD=tcc22&nlp
+      # - MONGO_INITDB_DATABASE=nlp
     ports:
       - 27017:27017
     logging:
