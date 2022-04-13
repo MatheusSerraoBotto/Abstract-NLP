@@ -21,3 +21,7 @@ Embedding/notebooks/GloVe/
 Embedding/notebooks/encoder/
 
 Embedding/tokens
+
+Embedding/notebooks/InferSent/
+
+!Embedding/notebooks/InferSent/infer_sent.ipynb

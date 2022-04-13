@@ -1,10 +1,10 @@
 import os
 from pymongo import MongoClient
 from nltk.tokenize import word_tokenize
-import nltk
 import pickle5 as pickle
 from gensim.utils import simple_preprocess
 
+import nltk
 nltk.download('punkt')
 
 def pre_process_sentences(sentence: str):
