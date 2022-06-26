@@ -27,3 +27,23 @@ Embedding/notebooks/InferSent/
 !Embedding/notebooks/InferSent/infer_sent.ipynb
 
 Embedding/dataframes/
+
+docs/
+
+code/WebScrap/venv/
+
+code/Mongo/node_modules/
+
+code/Mongo/dist/
+
+code/Embedding/.vscode/
+
+code/Embedding/__pycache__/
+
+code/Embedding/dataframes/
+
+code/Embedding/tokens
+
+code/Embedding/notebooks/InferSent/GloVe/
+
+code/Embedding/notebooks/InferSent/
