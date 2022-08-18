@@ -8,7 +8,7 @@ import nltk
 nltk.download('punkt')
 
 def pre_process_sentences(sentence: str):
-    abstract = simple_preprocess(sentence)
+    # abstract = simple_preprocess(sentence)
     abstract = word_tokenize(sentence.lower())
     abstract = filter(lambda word: word.isalnum(), abstract)
     return list(abstract)

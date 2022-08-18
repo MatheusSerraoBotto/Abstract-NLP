@@ -17,6 +17,6 @@ enviroment = {
         'start_year': int(os.environ['START_YEAR']),
         'end_year': int(os.environ['END_YEAR']),
         'per_page': int(os.environ['PER_PAGE']),
-        'pages': int(os.environ['PAGES'])
+        # 'pages': int(os.environ['PAGES'])
     }    
 }

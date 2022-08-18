@@ -11,6 +11,7 @@ from enviroment import enviroment
 from build_query import build_query
 from themes import themes 
 import pandas as pd
+import os
 
 # Setting url
 URL = enviroment['url']
@@ -24,7 +25,6 @@ HEADLESS = enviroment['selenium']['headless']
 START_YEAR = enviroment['query']['start_year']
 END_YEAR = enviroment['query']['end_year']
 PER_PAGE = enviroment['query']['per_page']
-PAGES = enviroment['query']['pages']
 
 
 def create_csv_of_ids(theme: str, pages: int):
@@ -38,6 +38,7 @@ def create_csv_of_ids(theme: str, pages: int):
         
         results = []
         for page in range(1, pages+1):
+            attempts = 0
             page_read = False
             while not page_read:
                 try:
@@ -57,9 +58,13 @@ def create_csv_of_ids(theme: str, pages: int):
                     
                     page_read = True
                 except:
-                    pass
+                    attempts = attempts + 1
+                    if attempts == 3:
+                        break
         df = pd.DataFrame({'id': results})
-        df.to_csv(f"/home/mserrao/Documentos/TCC_V2/WebScrap/themes/{theme.lower().replace(' ','_')}.csv", index=False, encoding='utf-8')
+        csv_name = theme.lower().replace(' ','_')
+        filename = f'{csv_name}.csv'
+        df.to_csv(os.path.join('code\WebScrap\src\ids', filename), index=False, encoding='utf-8')
 
     finally:
         driver.quit()

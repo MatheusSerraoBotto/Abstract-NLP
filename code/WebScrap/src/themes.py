@@ -1,7 +1,7 @@
 themes = [
-    ('Computer Vision', 100),
-    ('Cybersecurity', 40),
-    ('Sentence Embedding', 8),
+    # ('Computer Vision', 100),
+    # ('Cybersecurity', 40),
+    # ('Sentence Embedding', 6),
     ('Autonomous Vehicle', 100),
     ('IoT', 100),
     ('5G', 100),

@@ -1,5 +1,6 @@
 
 
+from fileinput import filename
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,6 +10,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from themes import themes
 from enviroment import enviroment
 import pandas as pd
+import os
 
 # Setting url
 ARTICLE_URL = enviroment['article_url']
@@ -52,9 +54,12 @@ def get_abstract_from_theme(id: str):
             pass
 
 def write_abstract_in_csv(csv_name):
-    filepath = f'/home/mserrao/Documentos/TCC_V2/WebScrap/src/themes/{csv_name}.csv'
+    filename = f'{csv_name}.csv'
+    filepath_read = os.path.join('code\WebScrap\src\ids',filename)
+    filepath_write = os.path.join(filename)
+
     
-    df = pd.read_csv(filepath, sep='\t')
+    df = pd.read_csv(filepath_read, sep='\t')
     df["title"] = ""
     df["abstract"] = ""
 
@@ -63,7 +68,7 @@ def write_abstract_in_csv(csv_name):
         df.at[index, 'title'] = title_text
         df.at[index, 'abstract'] = abstract_text
 
-    df.to_csv(filepath, index=False, encoding='utf-8')
+    df.to_csv(filepath_write, index=False, encoding='utf-8')
 
 def write_abstract_of_themes():
     for theme in themes:
