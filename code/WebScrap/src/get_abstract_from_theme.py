@@ -11,6 +11,7 @@ from themes import themes
 from enviroment import enviroment
 import pandas as pd
 import os
+import time
 
 # Setting url
 ARTICLE_URL = enviroment['article_url']
@@ -63,12 +64,22 @@ def write_abstract_in_csv(csv_name):
     df["title"] = ""
     df["abstract"] = ""
 
+    i = 0
+    times = []
     for index, row in df.iterrows():
+        start_time = time.time()
         title_text, abstract_text = get_abstract_from_theme(row.id)
         df.at[index, 'title'] = title_text
         df.at[index, 'abstract'] = abstract_text
+        diff_time = time.time() - start_time
+        print("--- %s seconds ---" % (diff_time))
+        times.append(diff_time)
+        i+=1
+        if i == 30:
+            break
+    print(times)
 
-    df.to_csv(filepath_write, index=False, encoding='utf-8')
+    # df.to_csv(filepath_write, index=False, encoding='utf-8')
 
 def write_abstract_of_themes():
     for theme in themes:

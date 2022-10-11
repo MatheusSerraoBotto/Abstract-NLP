@@ -64,7 +64,7 @@ def create_csv_of_ids(theme: str, pages: int):
         df = pd.DataFrame({'id': results})
         csv_name = theme.lower().replace(' ','_')
         filename = f'{csv_name}.csv'
-        df.to_csv(os.path.join('code\WebScrap\src\ids', filename), index=False, encoding='utf-8')
+        # df.to_csv(os.path.join('code\WebScrap\src\ids', filename), index=False, encoding='utf-8')
 
     finally:
         driver.quit()
